@@ -74,7 +74,7 @@
 							<br>
 							<div class="container text-center" id="loader"
 								style="display: none;">
-								<span class="fa fa-refresh fa-3x"></span>
+								<span class="fa fa-refresh fa-3x fa-spin"></span>
 								<h4>Please wait...</h4>
 							</div>
 							<button id="submit" type="submit" class="btn btn-outline-dark"
