@@ -22,7 +22,7 @@
 
 	<!-- Banner -->
 	<div class="container-fluid p-0 m-0">
-		<div class="jumbotron primary-background text-black">
+		<div class="jumbotron secondary-background text-white">
 			<div class="container">
 				<h3 class="display-3">Welcome to TechBlog</h3>
 				<p>Welcome to technical blog, world of technology</p>
@@ -31,10 +31,10 @@
 						incidentally for machines to execute.</q> <cite>-Harold Abelson</cite>
 				</blockquote>
 
-				<button class="btn btn-outline-dark btn-lg">
+				<button class="btn btn-outline-light btn-lg">
 					<span class="fa fa-user-plus"></span> Start! its free
 				</button>
-				<a href="login_page.jsp" class="btn btn-outline-dark btn-lg"> <span
+				<a href="login_page.jsp" class="btn btn-outline-light btn-lg"> <span
 					class="fa fa-user-circle fa-spin"></span> Login
 				</a>
 			</div>

@@ -1,7 +1,6 @@
 package com.tech.blog.servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.tech.blog.dao.UserDao;
+import com.tech.blog.entities.Message;
 import com.tech.blog.entities.User;
 import com.tech.blog.helper.ConnectionProvider;
 
@@ -29,15 +29,15 @@ public class LoginServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
-		
 		String userEmail = request.getParameter("email");
 		String userPassword = request.getParameter("password");
 		UserDao uDao = new UserDao(ConnectionProvider.getConnection());
 		User user = uDao.getUserByEmailAndPassword(userEmail, userPassword);
 		if(user==null) {
-			out.println("Invalid user");
+			Message msg = new Message("Invalid credentials! try again", "error", "alert-danger");
+			HttpSession session = request.getSession();
+			session.setAttribute("msg", msg);
+			response.sendRedirect("login_page.jsp");
 		} else {
 			HttpSession session = request.getSession();
 			session.setAttribute("currentUser", user);
