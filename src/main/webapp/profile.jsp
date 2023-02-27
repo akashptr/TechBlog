@@ -3,6 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@page errorPage="error_page.jsp"%>
 <%@page import="com.tech.blog.entities.User"%>
+<%@page import="com.tech.blog.entities.Message"%>
 <%
 User user = (User) session.getAttribute("currentUser");
 if (user == null) {
@@ -24,7 +25,7 @@ if (user == null) {
 <title>Profile page</title>
 </head>
 <body>
-
+	<!-- Navbar start -->
 	<nav class="navbar navbar-expand-lg navbar-dark secondary-background">
 		<a class="navbar-brand" href="index.jsp"><span
 			class="fa fa-asterisk"></span> Tech Blog</a>
@@ -61,16 +62,124 @@ if (user == null) {
 						Signup</a></li>
 			</ul>
 			<ul class="navbar-nav mr-right">
-				<li class="nav-item active"><a class="nav-link"
-					href="register_page.jsp"><span class="fa fa-user-circle"></span>
-						<%= user.getName() %></a></li>
-			
+				<li class="nav-item active"><a class="nav-link" href="#"
+					data-toggle="modal" data-target="#profileModal"><span
+						class="fa fa-user-circle"></span> <%=user.getName()%></a></li>
+
 				<li class="nav-item active"><a class="nav-link"
 					href="LogoutServlet"><span class="fa fa-user-times"></span>
 						Logout</a></li>
 			</ul>
 		</div>
 	</nav>
+	<!-- Navbar end -->
+	<%
+	Message msg = (Message) session.getAttribute("msg");
+	if (msg != null) {
+	%>
+	<div class="alert <%=msg.getCssClass()%>" role="alert">
+		<%=msg.getContent()%></div>
+	<%
+	session.removeAttribute("msg");
+	}
+	%>
+	<!-- Modal -->
+	<div class="modal fade" id="profileModal" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header secondary-background text-white">
+					<h5 class="modal-title" id="exampleModalLabel">TechBlog</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="container text-center">
+						<img src="profilepic/<%=user.getProfile()%>" class="img-fluid"
+							style="height: 100px; width: 110px; border-radius: 50%;"> <br>
+						<h5 class="modal-title mt-3" id="exampleModalLabel"><%=user.getName()%></h5>
+						<div id="profileDetails">
+							<table class="table">
+								<tbody>
+									<tr>
+										<th scope="row">ID :</th>
+										<td><%=user.getId()%></td>
+									</tr>
+									<tr>
+										<th scope="row">Email :</th>
+										<td><%=user.getEmail()%></td>
+									</tr>
+									<tr>
+										<th scope="row">Gender :</th>
+										<td><%=user.getGender()%></td>
+									</tr>
+									<tr>
+										<th scope="row">Status :</th>
+										<td><%=user.getAbout()%></td>
+									</tr>
+									<tr>
+										<th scope="row">Registered on :</th>
+										<td><%=user.getrDate().toString()%></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div id="profileEdit" style="display: none">
+							<h5>Please edit carefully</h5>
+							<form action="EditServlet" method="post"
+								enctype="multipart/form-data">
+								<table class="table">
+									<tr>
+										<td>ID :</td>
+										<td><%=user.getId()%></td>
+									</tr>
+									<tr>
+										<td>Name :</td>
+										<td><input type="text" name="userName"
+											value="<%=user.getName()%>" class="form-control"></td>
+									</tr>
+									<tr>
+										<td>Email :</td>
+										<td><input type="email" name="userEmail"
+											value="<%=user.getEmail()%>" class="form-control"></td>
+									</tr>
+									<tr>
+										<td>Password :</td>
+										<td><input type="password" name="userPassword"
+											value="<%=user.getPassword()%>" class="form-control"></td>
+									</tr>
+									<tr>
+										<td>Gender :</td>
+										<td><%=user.getGender()%></td>
+									</tr>
+									<tr>
+										<td>Status :</td>
+										<td><textarea rows="3" name="userAbout"
+												class="form-control"><%=user.getAbout()%></textarea></td>
+									</tr>
+									<tr>
+										<td>Update Photo:</td>
+										<td><input name="userProfile" type="file"
+											class="form-control"></td>
+									</tr>
+								</table>
+								<div class="container">
+									<button type="submit" class="btn btn-outline-dark">Save</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Close</button>
+					<button id="editBtn" type="button" class="btn btn-primary">Edit</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 	<!-- JavaScript -->
@@ -85,5 +194,22 @@ if (user == null) {
 		src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
+	<script>
+		$(document).ready(function() {
+			let isEdit = false;
+			$("#editBtn").click(function() {
+				if (isEdit) {
+					$("#profileDetails").show();
+					$("#profileEdit").hide();
+					$(this).text("Edit")
+				} else {
+					$("#profileDetails").hide();
+					$("#profileEdit").show();
+					$(this).text("Back");
+				}
+				isEdit = !isEdit;
+			});
+		});
+	</script>
 </body>
 </html>

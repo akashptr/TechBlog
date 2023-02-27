@@ -57,4 +57,23 @@ public class UserDao {
 		
 		return user;
 	}
+
+	public boolean updateUser(User updatedUser) {
+		boolean success = false;
+		try {
+			String query = "update user set name=?, email=?, password=?, about=?, profile=? where id=?";
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, updatedUser.getName());
+			pstmt.setString(2, updatedUser.getEmail());
+			pstmt.setString(3, updatedUser.getPassword());
+			pstmt.setString(4, updatedUser.getAbout());
+			pstmt.setString(5, updatedUser.getProfile());
+			pstmt.setInt(6, updatedUser.getId());
+			pstmt.executeUpdate();
+			success = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return success;
+	}
 }
