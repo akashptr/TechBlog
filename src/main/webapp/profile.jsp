@@ -1,9 +1,13 @@
+<%@page import="com.tech.blog.helper.ConnectionProvider"%>
+<%@page import="com.tech.blog.dao.PostDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@page errorPage="error_page.jsp"%>
 <%@page import="com.tech.blog.entities.User"%>
 <%@page import="com.tech.blog.entities.Message"%>
+<%@page import="com.tech.blog.entities.Category"%>
+<%@page import="java.util.*"%>
 <%
 User user = (User) session.getAttribute("currentUser");
 if (user == null) {
@@ -35,7 +39,6 @@ if (user == null) {
 			aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
-
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link" href="#"> <span
@@ -55,11 +58,9 @@ if (user == null) {
 					</div></li>
 				<li class="nav-item"><a class="nav-link" href="#"><span
 						class="fa fa-address-book"></span> Contact</a></li>
-				<li class="nav-item"><a class="nav-link" href="login_page.jsp"><span
-						class="fa fa-user-circle"></span> Login</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="register_page.jsp"><span class="fa fa-user-plus"></span>
-						Signup</a></li>
+				<li class="nav-item"><a class="nav-link" href="#"
+					data-toggle="modal" data-target="#postModal"><span
+						class="fa fa-asterisk"></span> New Post</a></li>
 			</ul>
 			<ul class="navbar-nav mr-right">
 				<li class="nav-item active"><a class="nav-link" href="#"
@@ -73,6 +74,7 @@ if (user == null) {
 		</div>
 	</nav>
 	<!-- Navbar end -->
+
 	<%
 	Message msg = (Message) session.getAttribute("msg");
 	if (msg != null) {
@@ -83,7 +85,8 @@ if (user == null) {
 	session.removeAttribute("msg");
 	}
 	%>
-	<!-- Modal -->
+
+	<!-- Profile Modal -->
 	<div class="modal fade" id="profileModal" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -180,7 +183,63 @@ if (user == null) {
 			</div>
 		</div>
 	</div>
+	<!-- Profile modal end -->
 
+	<!-- Post modal -->
+	<div class="modal fade bd-example-modal-lg" id="postModal"
+		tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Provide the
+						post details</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="postForm" action="AddPostServlet" method="post">
+						<div class="form-group">
+							<select class="form-control" name="postCategory">
+								<option selected disabled>--select category--</option>
+								<%
+								PostDao postDao = new PostDao(ConnectionProvider.getConnection());
+								List<Category> list = postDao.getAllCategories();
+								for (Category cat : list) {
+								%>
+								<option value="<%=cat.getCid()%>"><%=cat.getName()%></option>
+								<%
+								}
+								%>
+							</select>
+						</div>
+						<div class="form-group">
+							<input type="text" placeholder="Enter the title"
+								class="form-control" name="postTitle">
+						</div>
+						<div class="form-group">
+							<textarea rows="5" class="form-control"
+								placeholder="Write the content" name="postContent"></textarea>
+						</div>
+						<div class="form-group">
+							<textarea rows="5" class="form-control"
+								placeholder="Write the coode(if any)" name="postCode"></textarea>
+						</div>
+						<div class="form-group">
+							<label>Select picture</label> <br> <input type="file"
+								name="postPic">
+						</div>
+						<div class="Container text-center">
+							<button type="submit" class="btn btn-outline-dark">Post</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Post modal end -->
 
 	<!-- JavaScript -->
 	<script src="https://code.jquery.com/jquery-3.6.3.min.js"
@@ -209,7 +268,45 @@ if (user == null) {
 				}
 				isEdit = !isEdit;
 			});
+			$('#postForm').on('submit', function(event) {
+				event.preventDefault();
+				let form = new FormData(this);
+				$.ajax({
+					url : "AddPostServlet",
+					type : 'post',
+					data : form,
+					success : function(response, textStatus, jqXHR) {
+						console.log(response);
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log("Error");
+					},
+					processData : false,
+					contentType : false
+				});
+			});
 		});
 	</script>
+	<!-- <script>
+		$(document).ready(function() {
+			$('#postForm').on('submit', function(event) {
+				event.preventDefault();
+				let form = new FormData(this);
+				$.ajax({
+					url : "AddPostServlet",
+					type : 'post',
+					data : form,
+					success : function(response, textStatus, jqXHR) {
+						console.log(response);
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log("Error");
+					},
+					processData : false,
+					contentType : false
+				});
+			});
+		});
+	</script> -->
 </body>
 </html>
