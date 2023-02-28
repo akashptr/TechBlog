@@ -287,26 +287,5 @@ if (user == null) {
 			});
 		});
 	</script>
-	<!-- <script>
-		$(document).ready(function() {
-			$('#postForm').on('submit', function(event) {
-				event.preventDefault();
-				let form = new FormData(this);
-				$.ajax({
-					url : "AddPostServlet",
-					type : 'post',
-					data : form,
-					success : function(response, textStatus, jqXHR) {
-						console.log(response);
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						console.log("Error");
-					},
-					processData : false,
-					contentType : false
-				});
-			});
-		});
-	</script> -->
 </body>
 </html>
