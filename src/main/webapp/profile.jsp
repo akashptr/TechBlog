@@ -1,8 +1,8 @@
-<%@page import="com.tech.blog.helper.ConnectionProvider"%>
-<%@page import="com.tech.blog.dao.PostDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@page import="com.tech.blog.helper.ConnectionProvider"%>
+<%@page import="com.tech.blog.dao.PostDao"%>
 <%@page errorPage="error_page.jsp"%>
 <%@page import="com.tech.blog.entities.User"%>
 <%@page import="com.tech.blog.entities.Message"%>
@@ -75,6 +75,7 @@ if (user == null) {
 	</nav>
 	<!-- Navbar end -->
 
+	<!-- Alert message section -->
 	<%
 	Message msg = (Message) session.getAttribute("msg");
 	if (msg != null) {
@@ -85,6 +86,43 @@ if (user == null) {
 	session.removeAttribute("msg");
 	}
 	%>
+	<!-- Alert message section end -->
+
+	<!-- Main content -->
+
+	<main>
+		<div class="container-fluid">
+			<div class="row mt-2">
+				<!-- Side-bar for category -->
+				<div class="col-md-3">
+					<div class="list-group">
+						<a href="#" onclick="getPost(0, this)" class="list-group-item list-group-item-action active c-link">All posts</a>
+						<%
+						PostDao postDao = new PostDao(ConnectionProvider.getConnection());
+						List<Category> list = postDao.getAllCategories();
+						for (Category cat : list) {
+						%>
+						<a href="#" onclick="getPost(<%= cat.getCid() %>, this)" class="list-group-item list-group-item-action c-link"><%= cat.getName() %></a>
+						<%
+						}
+						%>
+					</div>
+				</div>
+				<!-- Post content -->
+				<div class="col-md-9">
+					<div class="container text-center" id="postLoader">
+						<i class="fa fa-refresh fa-3x fa-spin mt-2"></i>
+						<h3 class="mt-2">Loading...</h3>
+					</div>
+					<div class="conainer" id="postViewer">
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<!-- Main content end -->
 
 	<!-- Profile Modal -->
 	<div class="modal fade" id="profileModal" tabindex="-1" role="dialog"
@@ -205,8 +243,6 @@ if (user == null) {
 							<select class="form-control" name="postCategory">
 								<option selected disabled>--select category--</option>
 								<%
-								PostDao postDao = new PostDao(ConnectionProvider.getConnection());
-								List<Category> list = postDao.getAllCategories();
 								for (Category cat : list) {
 								%>
 								<option value="<%=cat.getCid()%>"><%=cat.getName()%></option>
@@ -253,7 +289,28 @@ if (user == null) {
 		src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<script>
+		function getPost(catId, linkRef) {
+			$('#postLoader').show();
+			$('#postViewer').hide();
+			$('.c-link').removeClass('active');
+			$.ajax({
+				url: 'postLoad.jsp',
+				data: {cId: catId},
+				success: function(response, textStatus, jqXHR) {
+					$('#postLoader').hide();
+					$('#postViewer').html(response);
+					$('#postViewer').show();
+					$(linkRef).addClass('active');
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					$('#postLoader').hide();
+					$('#postViewer').show();
+					console.log("error");
+				}
+			});
+		}
 		$(document).ready(function() {
 			let isEdit = false;
 			$("#editBtn").click(function() {
@@ -276,15 +333,21 @@ if (user == null) {
 					type : 'post',
 					data : form,
 					success : function(response, textStatus, jqXHR) {
+						swal("Successful", "Posted successfully", "success")
+						.then((value)=>{
+							$("#postModal").modal("hide");
+						});
 						console.log(response);
 					},
 					error : function(jqXHR, textStatus, errorThrown) {
+						swal("Not posted", "Something went wrong", "error");
 						console.log("Error");
 					},
 					processData : false,
 					contentType : false
 				});
-			});
+			});			
+			getPost(0, $('.c-link')[0]);
 		});
 	</script>
 </body>
