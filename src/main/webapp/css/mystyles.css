@@ -1,12 +1,15 @@
 @charset "ISO-8859-1";
 
-body {
-	
-}
-
 .primary-background {
 	background-color: #ffffff !important;
 }
 .secondary-background {
 	background-color: #000000;
+}
+
+.custom-bg {
+	background-image: url(../img/blogBg.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed; 
 }

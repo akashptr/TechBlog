@@ -28,7 +28,7 @@ if (user == null) {
 <link rel="stylesheet" href="css/mystyles.css" type="text/css">
 <title>Profile page</title>
 </head>
-<body>
+<body class="custom-bg">
 	<!-- Navbar start -->
 	<nav class="navbar navbar-expand-lg navbar-dark secondary-background">
 		<a class="navbar-brand" href="index.jsp"><span
@@ -89,7 +89,6 @@ if (user == null) {
 	<!-- Alert message section end -->
 
 	<!-- Main content -->
-
 	<main>
 		<div class="container-fluid">
 			<div class="row mt-2">
@@ -121,7 +120,6 @@ if (user == null) {
 			</div>
 		</div>
 	</main>
-
 	<!-- Main content end -->
 
 	<!-- Profile Modal -->

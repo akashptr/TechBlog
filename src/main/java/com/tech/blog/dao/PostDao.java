@@ -17,15 +17,16 @@ public class PostDao {
 		super();
 		this.conn = conn;
 	}
-	
+
+	// Gets all category
 	public List<Category> getAllCategories() {
 		List<Category> list = new ArrayList<>();
-		
+
 		try {
 			String query = "select * from categories";
 			Statement stmt = conn.createStatement();
 			ResultSet rSet = stmt.executeQuery(query);
-			while(rSet.next()) {
+			while (rSet.next()) {
 				Category category = new Category();
 				category.setCid(rSet.getInt("cid"));
 				category.setName(rSet.getString("name"));
@@ -35,10 +36,11 @@ public class PostDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return list;
 	}
-	
+
+	// Saves a post
 	public boolean savePost(Post post) {
 		boolean isSuccess = false;
 		try {
@@ -58,6 +60,7 @@ public class PostDao {
 		return isSuccess;
 	}
 
+	// Get all the posts
 	public List<Post> getAllPost() {
 		List<Post> posts = new ArrayList<>();
 		try {
@@ -80,6 +83,8 @@ public class PostDao {
 		}
 		return posts;
 	}
+
+	// Get posts by category
 	public List<Post> getPostByCategory(int catId) {
 		List<Post> posts = new ArrayList<>();
 		try {
@@ -102,5 +107,34 @@ public class PostDao {
 			e.printStackTrace();
 		}
 		return posts;
+	}
+
+	// Get a particular post
+	public Post getPostByPostId(int postId) {
+		Post post = null;
+
+		try {
+			
+			String query = "select * from posts where pid=?";
+			PreparedStatement pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, postId);
+			ResultSet set = pstmt.executeQuery();
+			if(set.next()) {
+				post = new Post();
+				post.setPid(set.getInt("pid"));
+				post.setpTitle(set.getString("pTitle"));
+				post.setpContent(set.getString("pContent"));
+				post.setpCode(set.getString("pCode"));
+				post.setpPic(set.getString("pPic"));
+				post.setpDate(set.getTimestamp("pDate"));
+				post.setCatId(set.getInt("cid"));
+				post.setUserId(set.getInt("userId"));
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return post;
 	}
 }
