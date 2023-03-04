@@ -31,9 +31,10 @@ User postUser = uDao.getUserByUserId(post.getUserId());
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="css/mystyles.css" type="text/css">
+<script type="text/javascript" src="js/MyScript.js"></script>
 <title><%=post.getpTitle()%></title>
 </head>
-<body class="custom-bg"c>
+<body class="custom-bg" c>
 	<!-- Navbar start -->
 	<nav class="navbar navbar-expand-lg navbar-dark secondary-background">
 		<a class="navbar-brand" href="index.jsp"><span
@@ -92,12 +93,15 @@ User postUser = uDao.getUserByUserId(post.getUserId());
 						<div class="card-body">
 							<img class="card-img-top mb-2" src="blogPic/<%=post.getpPic()%>"
 								alt="Card image cap">
-							<div class="row" style="font-style: italic; border: 1px solid #e2e2e2; padding-top: 15px">
+							<div class="row"
+								style="font-style: italic; border: 1px solid #e2e2e2; padding-top: 15px">
 								<div class="col-md-8">
-									<p><a href="#"><%= postUser.getName() %></a> posted this on:</p>
+									<p>
+										<a href="#"><%=postUser.getName()%></a> posted this on:
+									</p>
 								</div>
 								<div class="col-md-4" style="text-align: right">
-									<p><%= (new SimpleDateFormat("dd-MM-yyyy hh:mm a")).format(post.getpDate()) %></p>
+									<p><%=(new SimpleDateFormat("dd-MM-yyyy hh:mm a")).format(post.getpDate())%></p>
 								</div>
 							</div>
 							<div style="font-size: 20px">
@@ -108,10 +112,12 @@ User postUser = uDao.getUserByUserId(post.getUserId());
 							</div>
 						</div>
 						<div class="card-footer secondary-background">
-							<a href="#" class="btn btn-outline-light btn-sm"><i
-								class="fa fa-thumbs-o-up"></i> <span>10</span></a> <a href="#"
-								class="btn btn-outline-light btn-sm"><i
-								class="fa fa-commenting-o"></i> <span>20</span></a>
+							<a href="#" onclick="doLike(<%=post.getPid()%>, <%=user.getId()%>)" class="btn btn-outline-light btn-sm">
+								<i class="fa fa-thumbs-o-up"></i> <span>10</span>
+							</a>
+							<a href="#" class="btn btn-outline-light btn-sm">
+								<i class="fa fa-commenting-o"></i> <span>20</span>
+							</a>
 						</div>
 					</div>
 				</div>

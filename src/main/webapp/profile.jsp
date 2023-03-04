@@ -288,6 +288,7 @@ if (user == null) {
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script type="text/javascript" src="js/MyScript.js"></script>
 	<script>
 		function getPost(catId, linkRef) {
 			$('#postLoader').show();
