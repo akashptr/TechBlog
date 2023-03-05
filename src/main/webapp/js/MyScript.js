@@ -9,7 +9,13 @@ function doLike(pId, uId) {
 		url: 'LikeServlet',
 		data: likeData,
 		success: function(response, textStatus, jqXHR) {
-			console.log(response);
+			if(response.trim() === 'true') {
+				let noOfLikes = $('.likeCounter').html();
+				noOfLikes++;
+				$('.likeCounter').html(noOfLikes);
+			} else {
+				console.log("Some error occured")
+			}
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.log(errorThrown);

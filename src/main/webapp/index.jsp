@@ -1,3 +1,7 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="com.tech.blog.entities.Post"%>
+<%@page import="java.util.List"%>
+<%@page import="com.tech.blog.dao.PostDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="java.sql.*"%>
@@ -41,72 +45,44 @@
 		</div>
 	</div>
 
+	<%
+	PostDao postDao = new PostDao(ConnectionProvider.getConnection());
+	List<Post> allPost = postDao.getAllPost();
+	Iterator<Post> postIterator = allPost.iterator();
+	%>
+
 	<!-- Cards -->
 	<div class="container">
+		<%
+		OUTER: while (true) {
+		%>
 		<div class="row mb-2">
+			<%
+			for (int i = 0; i < 3; i++) {
+				if (postIterator.hasNext()) {
+					Post post = postIterator.next();
+					//create card
+			%>
 			<div class="col-md-4">
 				<div class="card">
 					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
+						<h5 class="card-title"><%=post.getpTitle()%></h5>
+						<p class="card-text"><%=post.getpContent()%></p>
+						<a href="showBlogPage.jsp?pid=<%=post.getPid()%>"
+							class="btn btn-outline-dark btn-sm">Read more...</a>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
-					</div>
-				</div>
-			</div>
+			<%
+			} else {
+			break OUTER;
+			}
+			}
+			%>
 		</div>
-		<div class="row">
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-body">
-						<h5 class="card-title">Java Programming</h5>
-						<p class="card-text">Some quick example text to build on the
-							card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-outline-dark">Read more</a>
-					</div>
-				</div>
-			</div>
-		</div>
+		<%
+		}
+		%>
 	</div>
 
 	<!-- JavaScript -->
@@ -121,10 +97,5 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
-	<script>
-		$(document).ready(function() {
-
-		})
-	</script>
 </body>
 </html>

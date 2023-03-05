@@ -101,7 +101,9 @@ if (user == null) {
 						List<Category> list = postDao.getAllCategories();
 						for (Category cat : list) {
 						%>
-						<a href="#" onclick="getPost(<%= cat.getCid() %>, this)" class="list-group-item list-group-item-action c-link"><%= cat.getName() %></a>
+						<a href="#" onclick="getPost(<%= cat.getCid() %>, this)" class="list-group-item list-group-item-action c-link">
+							<%= cat.getName() %>
+						</a>
 						<%
 						}
 						%>
